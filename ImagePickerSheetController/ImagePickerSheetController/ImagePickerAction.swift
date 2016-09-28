@@ -45,9 +45,13 @@ open class ImagePickerAction {
     /// Secondary handler defaults to handler if not specified.
     public convenience init(title: String, secondaryTitleString: String? = nil, style: ImagePickerActionStyle = .default, handler: @escaping Handler, secondaryHandler: SecondaryHandler? = nil) {
         
-        let secondaryTitleClosure = { _,_ in secondaryTitleString! } as Title
-        
-        self.init(title: title, secondaryTitle: secondaryTitleClosure, style: style, handler: handler, secondaryHandler: secondaryHandler)
+        if let secondaryTitle = secondaryTitleString {
+            let secondaryTitleClosure = { _,_ in secondaryTitle } as Title
+            
+            self.init(title: title, secondaryTitle: secondaryTitleClosure, style: style, handler: handler, secondaryHandler: secondaryHandler)
+        } else {
+            self.init(title: title, secondaryTitle: nil, style: style, handler: handler, secondaryHandler: secondaryHandler)
+        }
     }
     
     /// Initializes a new ImagePickerAction. The secondary title and handler are used when at least 1 image has been selected.
