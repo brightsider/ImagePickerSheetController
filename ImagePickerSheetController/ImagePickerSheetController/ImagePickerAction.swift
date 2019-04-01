@@ -20,13 +20,13 @@ open class ImagePickerAction {
     public typealias SecondaryHandler = (ImagePickerAction, Int) -> ()
     
     /// The title of the action's button.
-    open let title: String
+    public let title: String
     
     /// The title of the action's button when more than one image is selected.
-    open let secondaryTitle: Title
+    public let secondaryTitle: Title
     
     /// The style of the action. This is used to call a cancel handler when dismissing the controller by tapping the background.
-    open let style: ImagePickerActionStyle
+    public let style: ImagePickerActionStyle
     
     fileprivate let handler: Handler?
     fileprivate let secondaryHandler: SecondaryHandler?
@@ -34,7 +34,7 @@ open class ImagePickerAction {
     /// Initializes a new cancel ImagePickerAction
     public init(cancelTitle: String) {
         self.title = cancelTitle
-        self.secondaryTitle = { _ in cancelTitle }
+        self.secondaryTitle = { _, _  in cancelTitle }
         self.style = .cancel
         self.handler = nil
         self.secondaryHandler = nil
@@ -66,7 +66,7 @@ open class ImagePickerAction {
         }
         
         self.title = title
-        self.secondaryTitle = secondaryTitle ?? { _ in title }
+        self.secondaryTitle = secondaryTitle ?? { _, _  in title }
         self.style = style
         self.handler = handler
         self.secondaryHandler = secondaryHandler

@@ -8,6 +8,7 @@
 
 import Foundation
 import Photos
+import UIKit
 
 private let previewCollectionViewInset: CGFloat = 5
 
@@ -39,14 +40,14 @@ open class ImagePickerSheetController: UIViewController {
         collectionView.accessibilityIdentifier = "ImagePickerSheetPreview"
         collectionView.backgroundColor = .clear
         collectionView.allowsMultipleSelection = true
-        collectionView.imagePreviewLayout.sectionInset = UIEdgeInsetsMake(previewCollectionViewInset, previewCollectionViewInset, previewCollectionViewInset, previewCollectionViewInset)
+        collectionView.imagePreviewLayout.sectionInset = UIEdgeInsets(top: previewCollectionViewInset, left: previewCollectionViewInset, bottom: previewCollectionViewInset, right: previewCollectionViewInset)
         collectionView.imagePreviewLayout.showsSupplementaryViews = false
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.alwaysBounceHorizontal = true
         collectionView.register(PreviewCollectionViewCell.self, forCellWithReuseIdentifier: NSStringFromClass(PreviewCollectionViewCell.self))
-        collectionView.register(PreviewSupplementaryView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: NSStringFromClass(PreviewSupplementaryView.self))
+        collectionView.register(PreviewSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: NSStringFromClass(PreviewSupplementaryView.self))
         
         return collectionView
     }()
@@ -103,7 +104,7 @@ open class ImagePickerSheetController: UIViewController {
     }
     
     /// The media type of the displayed assets
-    open let mediaType: ImagePickerMediaType
+    public let mediaType: ImagePickerMediaType
     
     fileprivate var assets = [PHAsset]()
     
@@ -150,7 +151,7 @@ open class ImagePickerSheetController: UIViewController {
         modalPresentationStyle = .custom
         transitioningDelegate = self
         
-        NotificationCenter.default.addObserver(self, selector: #selector(ImagePickerSheetController.cancel), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ImagePickerSheetController.cancel), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
     deinit {
@@ -401,9 +402,9 @@ extension ImagePickerSheetController: UICollectionViewDataSource {
     
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath:
         IndexPath) -> UICollectionReusableView {
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: NSStringFromClass(PreviewSupplementaryView.self), for: indexPath) as! PreviewSupplementaryView
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: NSStringFromClass(PreviewSupplementaryView.self), for: indexPath) as! PreviewSupplementaryView
         view.isUserInteractionEnabled = false
-        view.buttonInset = UIEdgeInsetsMake(0.0, previewCheckmarkInset, previewCheckmarkInset, 0.0)
+        view.buttonInset = UIEdgeInsets(top: 0.0, left: previewCheckmarkInset, bottom: previewCheckmarkInset, right: 0.0)
         view.selected = selectedImageIndices.contains((indexPath as NSIndexPath).section)
         
         supplementaryViews[(indexPath as NSIndexPath).section] = view
